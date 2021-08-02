@@ -20,16 +20,13 @@ import javax.swing.JOptionPane;
 public class ButtonManager {
 
     public void addButtonAction(JButton btn, HashMap<Integer, JButton> listButton, GameForm game) {
-        btn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                game.setFlag(true);
-                String txt = btn.getText();
-                if (swappable(txt, listButton, game)) {
-                    swapNumber(listButton, game);
-                    updateCount(game);
-                    Win(listButton, game);
-                }
+        btn.addActionListener((ActionEvent e) -> {
+            game.setFlag(true);
+            String txt = btn.getText();
+            if (swappable(txt, listButton, game)) {
+                swapNumber(listButton, game);
+                updateCount(game);
+                Win(listButton, game);
             }
         });
     }

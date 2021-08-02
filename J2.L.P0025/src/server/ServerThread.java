@@ -1,10 +1,10 @@
 package server;
 
-
 import java.net.Socket;
 import java.io.*;
 import java.util.StringTokenizer;
 import main.Request;
+
 /**
  *
  * @author Admin
@@ -95,7 +95,7 @@ public class ServerThread extends Thread {
         int size = Integer.parseInt(tk.nextToken());
         server.addListGameRunning(romID, you, friend, team, size);
     }
-    
+
     public void resetRoom(String request) {
         //Request.RESET_ROOMGAME + roomID + "|" + userName + "|" + team);
         StringTokenizer tk = new StringTokenizer(request, "|");

@@ -1,7 +1,5 @@
 package server;
 
-
-
 import GUI.Game;
 import button.MyButton;
 import client.ClientManager;

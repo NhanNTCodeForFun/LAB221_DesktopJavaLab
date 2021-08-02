@@ -1,6 +1,5 @@
 package client;
 
-
 import GUI.Home;
 import GUI.Login;
 import java.util.*;
@@ -180,8 +179,8 @@ public class ClientManager {
         String room_ID = tk.nextToken();
         listGamePlay.get(room_ID).draw(room_ID);
     }
-    
-    public void removeGameUI(String request){
+
+    public void removeGameUI(String request) {
         StringTokenizer tk = new StringTokenizer(request, "|");
         String rq = tk.nextToken();
         String room_ID = tk.nextToken();

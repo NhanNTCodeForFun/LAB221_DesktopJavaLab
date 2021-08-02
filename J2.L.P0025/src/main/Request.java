@@ -15,13 +15,13 @@ public final class Request {
     public static final String SEND_INVITE = "send-invite|";
 
     public static final String REPLY_INVITE = "reply-invite|";
-    
+
     public static final String CREATE_ROOM = "create-room|";
 
     public static final String SET_TEXT_CLICK = "click|";
 
     public static final String LOSE_NOTIFY = "you-lose|";
-    
+
     public static final String WIN_NOTIFY = "you-win|";
 
     public static final String SET_USER_NAME = "Set-User-Name=";
@@ -35,7 +35,7 @@ public final class Request {
     public static final String REPLY_INVITE_NO = "reply-invite|NO|";
 
     public static final String GAME_DRAW = "draw|";
-    
+
     public static final String RESET_ROOMGAME = "reset-roomgame|";
 
 }

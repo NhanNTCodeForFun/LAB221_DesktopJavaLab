@@ -13,15 +13,17 @@ import product.Product;
  * @author Admin
  */
 public class Validation {
-    public static int checkInputInt(String num){
-        try {          
+
+    public static int checkInputInt(String num) {
+        try {
             int number = Integer.parseInt(num);
             return number;
         } catch (NumberFormatException e) {
             return -1;
         }
     }
-    public static double checkInputDouble(String num){
+
+    public static double checkInputDouble(String num) {
         try {
             double number = Double.parseDouble(num);
             return number;
@@ -29,10 +31,10 @@ public class Validation {
             return -1;
         }
     }
-    public static boolean checkDuplicateID(String ID, ArrayList<Product>list){
-        for (Product product : list) {
-             if(ID.equalsIgnoreCase(product.getProductID()))return false;
-        }
-        return true;
+
+    public static boolean checkDuplicateID(String ID, ArrayList<Product> list) {
+        return list.stream().noneMatch((product) -> {
+            return ID.equalsIgnoreCase(product.getProductID());
+        });
     }
 }

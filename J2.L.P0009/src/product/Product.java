@@ -10,6 +10,7 @@ package product;
  * @author Admin
  */
 public class Product {
+
     String productName;
     String category;
     String productID;
@@ -41,9 +42,9 @@ public class Product {
     public String getCategory() {
         return category;
     }
-    
-    public Product(){
-        
+
+    public Product() {
+
     }
 
     public String getProductName() {
@@ -61,7 +62,7 @@ public class Product {
     public double getPrice() {
         return price;
     }
-    
+
     public void setProductName(String productName) {
         this.productName = productName;
     }
@@ -85,6 +86,5 @@ public class Product {
     public void setUpdateState(boolean hasUpdate) {
         this.hasUpdate = hasUpdate;
     }
-    
-    
+
 }

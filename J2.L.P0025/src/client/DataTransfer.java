@@ -1,6 +1,5 @@
 package client;
 
-
 import GUI.Login;
 import java.net.Socket;
 import java.io.*;
@@ -78,7 +77,7 @@ public final class DataTransfer {
                             if (data.contains(Request.WIN_NOTIFY)) {
                                 playerControl.winGame(data.replace(Request.WIN_NOTIFY, ""));
                             }
-                            if(data.contains(Request.GAME_DRAW)){
+                            if (data.contains(Request.GAME_DRAW)) {
                                 playerControl.processDraw(data);
                             }
                         }

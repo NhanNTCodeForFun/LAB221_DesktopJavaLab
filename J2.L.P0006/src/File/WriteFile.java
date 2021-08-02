@@ -9,7 +9,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
 
-
 /**
  *
  * @author Admin
@@ -27,17 +26,18 @@ public class WriteFile {
         this.content = content;
     }
 
+    /**
+     * Write to file
+     */
     public void Write() {
         try {
-            PrintWriter fw = new PrintWriter(new FileOutputStream(path), true);
-            String s[] = content.split("\n");
-            for (int i = 0; i < s.length; i++) {
-                String string = s[i];
-                fw.print(string + "\r\n");
+            try (PrintWriter fw = new PrintWriter(new FileOutputStream(path), true)) {
+                String s[] = content.split("\n");
+                for (String string : s) {
+                    fw.print(string + "\r\n");
+                }
             }
-            fw.close();
         } catch (FileNotFoundException ex) {
-            ex.printStackTrace();
         }
     }
 }

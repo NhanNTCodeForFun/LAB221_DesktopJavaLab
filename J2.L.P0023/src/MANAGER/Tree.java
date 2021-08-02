@@ -1,7 +1,5 @@
 package MANAGER;
 
-
-
 import GUI.MyFileBrowserFrame;
 import GUI.RenameDialog;
 import javax.swing.*;
@@ -18,13 +16,14 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+
 /**
  *
  * @author Admin
  */
 public class Tree {
 
-    private MyFileBrowserFrame myFileBrowserFrame;
+    private final MyFileBrowserFrame myFileBrowserFrame;
 
     public Tree(MyFileBrowserFrame myFileBrowserFrame) {
         this.myFileBrowserFrame = myFileBrowserFrame;
@@ -37,7 +36,7 @@ public class Tree {
         myFileBrowserFrame.getTree().addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                File file = null;
+                File file;
                 try {
                     file = new File(((Node) myFileBrowserFrame.getTree().getLastSelectedPathComponent()).getParent().getPath());
 
@@ -112,147 +111,134 @@ public class Tree {
         });
 
         // set action when selectiong copy itemMenu in right click menu
-        myFileBrowserFrame.getCopy().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                myFileBrowserFrame.setFileCopy(new File(((Node) myFileBrowserFrame.getTree().getLastSelectedPathComponent()).getParent().getPath()));
-                myFileBrowserFrame.getTxtStatus().setText("Copy: " + myFileBrowserFrame.getFileCopy().toPath());
-                myFileBrowserFrame.setPaste(true);
-            }
+        myFileBrowserFrame.getCopy().addActionListener((ActionEvent e) -> {
+            myFileBrowserFrame.setFileCopy(new File(((Node) myFileBrowserFrame.getTree().getLastSelectedPathComponent()).getParent().getPath()));
+            myFileBrowserFrame.getTxtStatus().setText("Copy: " + myFileBrowserFrame.getFileCopy().toPath());
+            myFileBrowserFrame.setPaste(true);
         });
 
         // set action when selectiong paste itemMenu in right click menu
-        myFileBrowserFrame.getPaste().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                File folderPaster = ((Node) myFileBrowserFrame.getTree().getLastSelectedPathComponent()).getParent();
+        myFileBrowserFrame.getPaste().addActionListener((ActionEvent e) -> {
+            File folderPaster = ((Node) myFileBrowserFrame.getTree().getLastSelectedPathComponent()).getParent();
 
-                File fileCopy = myFileBrowserFrame.getFileCopy();
-                String pathParent = folderPaster.getPath();
-                String nameFileCopy = fileCopy.getName();
-                File filePaste = new File(pathParent + "/" + nameFileCopy);
+            File fileCopy = myFileBrowserFrame.getFileCopy();
+            String pathParent = folderPaster.getPath();
+            String nameFileCopy = fileCopy.getName();
+            File filePaste = new File(pathParent + "/" + nameFileCopy);
 
-                // check folder selected is same folder of file copy or not
-                // is not same then copy file to folder selected
-                // is same then add text "-Copy" to end of name file
-                if (folderPaster.getPath().equals(fileCopy.getParent())) {
-                    String newName = reNameFileExest(filePaste);
-                    if (fileCopy.isFile()) {
-                        try {
-                            Files.copy(fileCopy.toPath(), new File(newName).toPath(), StandardCopyOption.REPLACE_EXISTING);
-                            //reload the tree
-                            TreePath treePath = myFileBrowserFrame.getSelectionPath();
-                            int[] rowPath = myFileBrowserFrame.getRowPath();
-                            reloadTree(myFileBrowserFrame, treePath, rowPath);
-                        } catch (IOException e1) {
-                            JOptionPane.showMessageDialog(myFileBrowserFrame, "Can't copy file!!!", "ERROR", JOptionPane.ERROR_MESSAGE);
-                        }
-                    } else {
-                        copyFolder(fileCopy, folderPaster);
+            // check folder selected is same folder of file copy or not
+            // is not same then copy file to folder selected
+            // is same then add text "-Copy" to end of name file
+            if (folderPaster.getPath().equals(fileCopy.getParent())) {
+                String newName = reNameFileExest(filePaste);
+                if (fileCopy.isFile()) {
+                    try {
+                        Files.copy(fileCopy.toPath(), new File(newName).toPath(), StandardCopyOption.REPLACE_EXISTING);
                         //reload the tree
                         TreePath treePath = myFileBrowserFrame.getSelectionPath();
                         int[] rowPath = myFileBrowserFrame.getRowPath();
                         reloadTree(myFileBrowserFrame, treePath, rowPath);
+                    } catch (IOException e1) {
+                        JOptionPane.showMessageDialog(myFileBrowserFrame, "Can't copy file!!!", "ERROR", JOptionPane.ERROR_MESSAGE);
                     }
-
                 } else {
-                    if (fileCopy.isFile()) {
-                        if (filePaste.exists()) {
-                            int replace = JOptionPane.showConfirmDialog(myFileBrowserFrame, "File is exist. Are you want replace???", "Replace?", JOptionPane.YES_NO_OPTION);
-                            if (replace == JOptionPane.YES_OPTION) {
-                                paste(fileCopy, filePaste);
-                            }
-                        } else {
+                    copyFolder(fileCopy, folderPaster);
+                    //reload the tree
+                    TreePath treePath = myFileBrowserFrame.getSelectionPath();
+                    int[] rowPath = myFileBrowserFrame.getRowPath();
+                    reloadTree(myFileBrowserFrame, treePath, rowPath);
+                }
+
+            } else {
+                if (fileCopy.isFile()) {
+                    if (filePaste.exists()) {
+                        int replace = JOptionPane.showConfirmDialog(myFileBrowserFrame, "File is exist. Are you want replace???", "Replace?", JOptionPane.YES_NO_OPTION);
+                        if (replace == JOptionPane.YES_OPTION) {
                             paste(fileCopy, filePaste);
                         }
                     } else {
-                        copyFolder(fileCopy, folderPaster);
-                        //reload the tree
-                        TreePath treePath = myFileBrowserFrame.getSelectionPath();
-                        int[] rowPath = myFileBrowserFrame.getRowPath();
-                        reloadTree(myFileBrowserFrame, treePath, rowPath);
+                        paste(fileCopy, filePaste);
                     }
+                } else {
+                    copyFolder(fileCopy, folderPaster);
+                    //reload the tree
+                    TreePath treePath = myFileBrowserFrame.getSelectionPath();
+                    int[] rowPath = myFileBrowserFrame.getRowPath();
+                    reloadTree(myFileBrowserFrame, treePath, rowPath);
                 }
             }
         });
 
         // set action when move itemMenu in right click menu
-        myFileBrowserFrame.getMove().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        myFileBrowserFrame.getMove().addActionListener((ActionEvent e) -> {
+            //check status is moving or not
+            //is moving then action move
+            //is not moving then enable move
+            if (!myFileBrowserFrame.isMove()) {
+                myFileBrowserFrame.setFileMove(new File(((Node) myFileBrowserFrame.getTree().getLastSelectedPathComponent()).getParent().getPath()));
+                myFileBrowserFrame.getTxtStatus().setText("Move: " + myFileBrowserFrame.getFileMove().toPath());
+                myFileBrowserFrame.setMove(true);
+            } else {
+                File folderPaster = ((Node) myFileBrowserFrame.getTree().getLastSelectedPathComponent()).getParent();
 
-                //check status is moving or not
-                //is moving then action move
-                //is not moving then enable move
-                if (!myFileBrowserFrame.isMove()) {
-                    myFileBrowserFrame.setFileMove(new File(((Node) myFileBrowserFrame.getTree().getLastSelectedPathComponent()).getParent().getPath()));
-                    myFileBrowserFrame.getTxtStatus().setText("Move: " + myFileBrowserFrame.getFileMove().toPath());
-                    myFileBrowserFrame.setMove(true);
-                } else {
-                    File folderPaster = ((Node) myFileBrowserFrame.getTree().getLastSelectedPathComponent()).getParent();
+                File fileCopy = myFileBrowserFrame.getFileMove();
+                String pathParent = folderPaster.getPath();
+                String nameFileCopy = fileCopy.getName();
+                File filePaste = new File(pathParent + "/" + nameFileCopy);
 
-                    File fileCopy = myFileBrowserFrame.getFileMove();
-                    String pathParent = folderPaster.getPath();
-                    String nameFileCopy = fileCopy.getName();
-                    File filePaste = new File(pathParent + "/" + nameFileCopy);
-
-                    // check selected has choose is directory or file
-                    // is directory then copy file to folder selected
-                    // is file then so notification "copy fail"
-                    if (fileCopy.isFile()) {
-                        if (filePaste.exists()) {
-                            int replace = JOptionPane.showConfirmDialog(myFileBrowserFrame, "File is exist. Are you want replace???", "Replace?", JOptionPane.YES_NO_OPTION);
-                            if (replace == JOptionPane.YES_OPTION) {
-                                move(folderPaster, fileCopy);
-                            }
-                        } else {
+                // check selected has choose is directory or file
+                // is directory then copy file to folder selected
+                // is file then so notification "copy fail"
+                if (fileCopy.isFile()) {
+                    if (filePaste.exists()) {
+                        int replace = JOptionPane.showConfirmDialog(myFileBrowserFrame, "File is exist. Are you want replace???", "Replace?", JOptionPane.YES_NO_OPTION);
+                        if (replace == JOptionPane.YES_OPTION) {
                             move(folderPaster, fileCopy);
                         }
                     } else {
-                        copyFolder(fileCopy, folderPaster);
-                        deleteFolder(fileCopy);
-                        myFileBrowserFrame.setMove(false);
-                        //reload the tree
-                        TreePath treePath = myFileBrowserFrame.getSelectionPath();
-                        int[] rowPath = myFileBrowserFrame.getRowPath();
-                        reloadTree(myFileBrowserFrame, treePath, rowPath);
+                        move(folderPaster, fileCopy);
                     }
+                } else {
+                    copyFolder(fileCopy, folderPaster);
+                    deleteFolder(fileCopy);
+                    myFileBrowserFrame.setMove(false);
+                    //reload the tree
+                    TreePath treePath = myFileBrowserFrame.getSelectionPath();
+                    int[] rowPath = myFileBrowserFrame.getRowPath();
+                    reloadTree(myFileBrowserFrame, treePath, rowPath);
                 }
             }
         });
 
         // set action when rename itemMenu in right click menu
-        myFileBrowserFrame.getReName().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //show dialog enble input new name
-                RenameDialog renameDialog = new RenameDialog(myFileBrowserFrame, true);
-                renameDialog.getFindButton().setEnabled(false);
-                Rename rename = new Rename(myFileBrowserFrame, renameDialog);
-                renameDialog.setVisible(true);
+        myFileBrowserFrame.getReName().addActionListener((ActionEvent e) -> {
+            //show dialog enble input new name
+            RenameDialog renameDialog = new RenameDialog(myFileBrowserFrame, true);
+            renameDialog.getFindButton().setEnabled(false);
+            Rename rename = new Rename(myFileBrowserFrame, renameDialog);
+            renameDialog.setVisible(true);
 
-                //check new name can rename
-                if (myFileBrowserFrame.isRename()) {
-                    File oldFile = ((Node) myFileBrowserFrame.getTree().getLastSelectedPathComponent()).getParent();
-                    File newFile = myFileBrowserFrame.getFileRename();
-                    if (newFile.exists()) {
-                        JOptionPane.showMessageDialog(myFileBrowserFrame, "Can change new name", "ERROR", JOptionPane.ERROR_MESSAGE);
+            //check new name can rename
+            if (myFileBrowserFrame.isRename()) {
+                File oldFile = ((Node) myFileBrowserFrame.getTree().getLastSelectedPathComponent()).getParent();
+                File newFile = myFileBrowserFrame.getFileRename();
+                if (newFile.exists()) {
+                    JOptionPane.showMessageDialog(myFileBrowserFrame, "Can change new name", "ERROR", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    boolean success = oldFile.renameTo(newFile);
+
+                    //check rename is succes or not
+                    if (success) {
+                        TreePath treePath = myFileBrowserFrame.getSelectionPath();
+                        int[] rowPath = myFileBrowserFrame.getRowPath();
+                        reloadTree(myFileBrowserFrame, treePath, rowPath);
+                        myFileBrowserFrame.getTxtStatus().setText("Succes rename: " + myFileBrowserFrame.getFileRename().getPath());
                     } else {
-                        boolean success = oldFile.renameTo(newFile);
-
-                        //check rename is succes or not
-                        if (success) {
-                            TreePath treePath = myFileBrowserFrame.getSelectionPath();
-                            int[] rowPath = myFileBrowserFrame.getRowPath();
-                            reloadTree(myFileBrowserFrame, treePath, rowPath);
-                            myFileBrowserFrame.getTxtStatus().setText("Succes rename: " + myFileBrowserFrame.getFileRename().getPath());
-                        } else {
-                            myFileBrowserFrame.getTxtStatus().setText("Fail Rename: " + myFileBrowserFrame.getFileRename().getPath());
-                        }
+                        myFileBrowserFrame.getTxtStatus().setText("Fail Rename: " + myFileBrowserFrame.getFileRename().getPath());
                     }
-
-                    myFileBrowserFrame.setRename(false);
                 }
+
+                myFileBrowserFrame.setRename(false);
             }
         });
     }
@@ -288,22 +274,19 @@ public class Tree {
     private void selectingNode() {
 
         //show contains of folder or file selected
-        myFileBrowserFrame.getTree().addTreeSelectionListener(new TreeSelectionListener() {
-            @Override
-            public void valueChanged(TreeSelectionEvent e) {
-                try {
-                    Node nodeSelected = (Node) myFileBrowserFrame.getTree().getLastSelectedPathComponent();
-                    myFileBrowserFrame.getContains().setText(showContains(nodeSelected));
+        myFileBrowserFrame.getTree().addTreeSelectionListener((TreeSelectionEvent e) -> {
+            try {
+                Node nodeSelected = (Node) myFileBrowserFrame.getTree().getLastSelectedPathComponent();
+                myFileBrowserFrame.getContains().setText(showContains(nodeSelected));
 
-                    if (nodeSelected.getParent().isDirectory()) {
-                        myFileBrowserFrame.setSelectionPath(e.getPath());
-                    }
-                    myFileBrowserFrame.setRowPath(myFileBrowserFrame.getRowPath());
-                    myFileBrowserFrame.getTxtStatus().setText("Selected: " + nodeSelected.getParent().getPath());
-
-                } catch (NullPointerException ex) {
-                    myFileBrowserFrame.getTxtStatus().setText("ERROR");
+                if (nodeSelected.getParent().isDirectory()) {
+                    myFileBrowserFrame.setSelectionPath(e.getPath());
                 }
+                myFileBrowserFrame.setRowPath(myFileBrowserFrame.getRowPath());
+                myFileBrowserFrame.getTxtStatus().setText("Selected: " + nodeSelected.getParent().getPath());
+
+            } catch (NullPointerException ex) {
+                myFileBrowserFrame.getTxtStatus().setText("ERROR");
             }
         });
 
@@ -359,14 +342,6 @@ public class Tree {
         long size = 0;
         if (!myFileBrowserFrame.isReload()) {
             myFileBrowserFrame.getContains().setText("Counting...");
-//            for (File file : directory.listFiles()) {
-//                if (file.isFile()) {
-//                    size += file.length();
-//                } else {
-//                    size += folderSize(file);
-//                    System.out.println(file.getPath());
-//                }
-//            }
         }
         return size;
     }
@@ -449,8 +424,6 @@ public class Tree {
                 for (File f : listFile) {
                     copyFolder(f, foPaste);
                 }
-            } else {
-                return;
             }
         } else {
             if (foPaste.exists()) {
@@ -496,8 +469,6 @@ public class Tree {
                 for (File f : listFile) {
                     copyFolder(f, foPaste);
                 }
-            } else {
-                return;
             }
         } else {
             if (foPaste.exists()) {
@@ -542,6 +513,5 @@ public class Tree {
         } catch (IOException e) {
             System.out.println("Error delete" + file.getPath());
         }
-        return;
     }
 }

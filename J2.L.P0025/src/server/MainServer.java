@@ -76,13 +76,14 @@ public class MainServer {
         listStatus.put(roomID, status);
     }
 
-    public String[] newStatus(int size){
+    public String[] newStatus(int size) {
         String[] status = new String[size * size];
         for (int i = 0; i < size * size; i++) {
             status[i] = "*";
         }
         return status;
     }
+
     public void resetListGameRunning(String roomID, String you, String team, int size) {
         int no = listRoom.get(roomID)[0][0].equals(you) ? 0 : 1;
         listRoom.get(roomID)[1][no] = team;
@@ -99,7 +100,7 @@ public class MainServer {
         for (String status1 : statuss) {
             System.out.print(status1);
         }
-        
+
         checkWinClient(checkWin, noPlayer, index, roomID, serThread);
     }
 

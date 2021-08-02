@@ -115,46 +115,39 @@ public class GameManager extends ButtonManager {
 
     // Thêm acction cho nút NewGame và combobox
     public void addAction(HashMap<Integer, JButton> listButton, GameForm game) {
-        game.getBtnNewGame().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-                if (game.isFlag()) {
-                    game.setFlag(false);
-                    int confirm = JOptionPane.showConfirmDialog(game, "Do you really want to start new game?",
-                            "Confirm Dialog", JOptionPane.YES_NO_OPTION);
-                    if (confirm == JOptionPane.YES_OPTION) {
-                        game.setFlag(true);
-                        game.setTime(0);
-                        game.getLbTime().setText(game.getTime() + " second");
-                        game.setMoveCount(0);
-                        game.getLbCount().setText(Integer.toString(game.getMoveCount()));
-                        createGameArea(listButton, game);
-                    } else {
-                        game.setFlag(true);
-                    }
-                } else {
+        game.getBtnNewGame().addActionListener((ActionEvent e) -> {
+            if (game.isFlag()) {
+                game.setFlag(false);
+                int confirm = JOptionPane.showConfirmDialog(game, "Do you really want to start new game?",
+                        "Confirm Dialog", JOptionPane.YES_NO_OPTION);
+                if (confirm == JOptionPane.YES_OPTION) {
                     game.setFlag(true);
                     game.setTime(0);
                     game.getLbTime().setText(game.getTime() + " second");
                     game.setMoveCount(0);
                     game.getLbCount().setText(Integer.toString(game.getMoveCount()));
                     createGameArea(listButton, game);
+                } else {
+                    game.setFlag(true);
                 }
-
+            } else {
+                game.setFlag(true);
+                game.setTime(0);
+                game.getLbTime().setText(game.getTime() + " second");
+                game.setMoveCount(0);
+                game.getLbCount().setText(Integer.toString(game.getMoveCount()));
+                createGameArea(listButton, game);
             }
         });
-        game.getCmbSize().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                setSizeGame(game);
-            }
+        game.getCmbSize().addActionListener((ActionEvent e) -> {
+            setSizeGame(game);
         });
     }
 
     // Thread đếm thời gian
     public Thread Time(GameForm game) {
-        Thread Time = new Thread() {
+        Thread Time;
+        Time = new Thread() {
             @Override
             public void run() {
                 while (true) {

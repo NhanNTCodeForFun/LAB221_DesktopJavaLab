@@ -11,13 +11,12 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-
 /**
  *
  * @author Admin
  */
 public class GameForm extends javax.swing.JFrame {
-    
+
     private int sizeGame = 3;
     private int emptyPos;
     private int currentPos;
@@ -73,8 +72,6 @@ public class GameForm extends javax.swing.JFrame {
         this.flag = flag;
     }
 
-
-
     public JButton getBtnNewGame() {
         return btnNewGame;
     }
@@ -101,7 +98,7 @@ public class GameForm extends javax.swing.JFrame {
     public GameForm() {
         initComponents();
         JOptionPane.showMessageDialog(null, "Put the numbers in the correct order, the space at the end to win!");
-        
+
     }
 
     /**
@@ -251,10 +248,8 @@ public class GameForm extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new GameForm().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new GameForm().setVisible(true);
         });
     }
 

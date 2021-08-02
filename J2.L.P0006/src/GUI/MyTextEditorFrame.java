@@ -5,7 +5,6 @@
  */
 package GUI;
 
-
 import File.WriteFile;
 import java.awt.print.*;
 import java.io.*;
@@ -21,7 +20,7 @@ import javax.swing.undo.*;
  *
  * @author Admin
  */
-public class MyTextEditorFrame extends javax.swing.JFrame {
+public final class MyTextEditorFrame extends javax.swing.JFrame {
 
     String temp;
     String findString;
@@ -39,11 +38,8 @@ public class MyTextEditorFrame extends javax.swing.JFrame {
         initComponents();
         um = new UndoManager();
         Document doc = this.jTextAreaNote.getDocument();
-        doc.addUndoableEditListener(new UndoableEditListener() {
-            @Override
-            public void undoableEditHappened(UndoableEditEvent e) {
-                um.addEdit(e.getEdit());
-            }
+        doc.addUndoableEditListener((UndoableEditEvent e) -> {
+            um.addEdit(e.getEdit());
         });
         setNotepad();
     }
@@ -60,7 +56,7 @@ public class MyTextEditorFrame extends javax.swing.JFrame {
 
     @Override
     public void setTitle(String title) {
-        super.setTitle(title); 
+        super.setTitle(title);
     }
 
     public void setFindStr(String findStr) {
@@ -89,10 +85,10 @@ public class MyTextEditorFrame extends javax.swing.JFrame {
                         + filePath, "Notepad",
                         JOptionPane.YES_NO_CANCEL_OPTION,
                         JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
-               
+
             } else {
                 String file = this.getTitle().replaceAll("- Notepad", "");
-                
+
                 result = JOptionPane.showOptionDialog(this,
                         "Do you want to save change to "
                         + file, "Notepad",
@@ -115,10 +111,10 @@ public class MyTextEditorFrame extends javax.swing.JFrame {
                     if (option == JFileChooser.APPROVE_OPTION) {
 
                         try {
-                            BufferedWriter out = new BufferedWriter(new FileWriter(save.getSelectedFile().getPath() + ".txt"));
-                            out.write(this.jTextAreaNote.getText());
-                            out.close();
-                        } catch (Exception ex) {
+                            try (BufferedWriter out = new BufferedWriter(new FileWriter(save.getSelectedFile().getPath() + ".txt"))) {
+                                out.write(this.jTextAreaNote.getText());
+                            }
+                        } catch (IOException ex) {
                             System.out.println(ex.getMessage());
                         }
                     }
@@ -143,7 +139,7 @@ public class MyTextEditorFrame extends javax.swing.JFrame {
         int pos;
         if (findDown) {
             pos = t.indexOf(findString, posStart);
-            
+
             if (pos == -1) {
                 JOptionPane.showMessageDialog(this, "Not found!");
                 jTextAreaNote.setCaretPosition(posStart);
@@ -455,7 +451,7 @@ public class MyTextEditorFrame extends javax.swing.JFrame {
                 while (scan.hasNext()) {
                     this.jTextAreaNote.append(scan.nextLine() + "\n");
                 }
-            } catch (Exception e) {
+            } catch (FileNotFoundException e) {
                 JOptionPane.showMessageDialog(this, "Can't open file!", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
@@ -536,7 +532,7 @@ public class MyTextEditorFrame extends javax.swing.JFrame {
         if (um.canUndo()) {
             try {
                 um.undo();
-            } catch (Exception e) {
+            } catch (CannotUndoException e) {
             }
         }
     }//GEN-LAST:event_jMenuItemUndoActionPerformed
@@ -546,7 +542,7 @@ public class MyTextEditorFrame extends javax.swing.JFrame {
         if (um.canRedo()) {
             try {
                 um.redo();
-            } catch (Exception e) {
+            } catch (CannotRedoException e) {
             }
         }
     }//GEN-LAST:event_jMenuItemRedoActionPerformed
@@ -563,7 +559,7 @@ public class MyTextEditorFrame extends javax.swing.JFrame {
 
     private void jMenuItemPasteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemPasteActionPerformed
         // TODO add your handling code here:
-        jTextAreaNote.paste(); 
+        jTextAreaNote.paste();
     }//GEN-LAST:event_jMenuItemPasteActionPerformed
 
     private void jMenuItemDelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemDelActionPerformed
@@ -604,13 +600,6 @@ public class MyTextEditorFrame extends javax.swing.JFrame {
         jMenuItemDel.setEnabled(setEdit);
     }//GEN-LAST:event_jMenuEditMenuSelected
 
-    private void formWindowClosing(java.awt.event.WindowEvent evt) {
-        // TODO add your handling code here:
-        if (!Verify_Save()) {
-            return;
-        }
-    }
-
     /**
      * @param args the command line arguments
      */
@@ -640,10 +629,8 @@ public class MyTextEditorFrame extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new MyTextEditorFrame().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new MyTextEditorFrame().setVisible(true);
         });
     }
 

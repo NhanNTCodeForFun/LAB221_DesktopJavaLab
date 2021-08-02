@@ -1,13 +1,12 @@
 package GUI;
 
-
-
 import button.ButtonEvent;
 import button.MyButton;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.Border;
 import server.GamePlayManager;
+
 /**
  *
  * @author Admin

@@ -9,14 +9,14 @@ import GUI.GameForm;
 import Manager.GameManager;
 import java.util.HashMap;
 
-
-
 /**
  *
  * @author Admin
  */
 import javax.swing.JButton;
+
 public class main {
+
     public static void main(String[] args) {
         GameForm game = new GameForm();
         game.setVisible(true);
@@ -26,5 +26,5 @@ public class main {
         time.start();
         manager.addAction(listButton, game);
     }
-              
+
 }

@@ -1,10 +1,10 @@
 package button;
 
-
 import java.awt.Color;
 import java.awt.event.*;
 import javax.swing.JLabel;
 import server.GamePlayManager;
+
 /**
  *
  * @author Admin

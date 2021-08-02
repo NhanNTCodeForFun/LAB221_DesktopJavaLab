@@ -1,16 +1,16 @@
 package GUI;
 
-
 import client.ClientManager;
 import javax.swing.JOptionPane;
+
 /**
  *
  * @author Admin
  */
 public class Login extends javax.swing.JFrame {
-    
+
     private final ClientManager playerControl;
-    
+
     public Login(ClientManager playerControl) {
         initComponents();
         setResizable(false);
@@ -18,11 +18,11 @@ public class Login extends javax.swing.JFrame {
         setTitle("Login");
         this.playerControl = playerControl;
     }
-    
+
     public void displayMessage(String message) {
         JOptionPane.showMessageDialog(this, message);
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {

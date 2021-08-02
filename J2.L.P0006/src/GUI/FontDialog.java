@@ -12,7 +12,7 @@ import javax.swing.*;
  *
  * @author Admin
  */
-public class FontDialog extends javax.swing.JDialog {
+public final class FontDialog extends javax.swing.JDialog {
 
     /**
      * Creates new form Font
@@ -42,8 +42,8 @@ public class FontDialog extends javax.swing.JDialog {
                 .getLocalGraphicsEnvironment();
         String fontNames[] = ge.getAvailableFontFamilyNames();
         DefaultListModel model = new DefaultListModel();
-        for (int i = 0; i < fontNames.length; i++) {
-            model.addElement(fontNames[i]);
+        for (String fontName : fontNames) {
+            model.addElement(fontName);
         }
         jListFont.setModel(model);
     }
@@ -54,7 +54,7 @@ public class FontDialog extends javax.swing.JDialog {
         jTextFieldFont.setText(f.getFontName());
         jListFont.setSelectedValue(f.getFontName(), true);
         jListFontStyle.setSelectedIndex(f.getStyle());
-        jTextFieldFontStyle.setText(jListFontStyle.getSelectedValue().toString());
+        jTextFieldFontStyle.setText(jListFontStyle.getSelectedValue());
         jTextFieldSize.setText(Integer.toString(f.getSize()));
         jListSize.setSelectedValue(f.getSize(), true);
     }
@@ -234,7 +234,7 @@ public class FontDialog extends javax.swing.JDialog {
     private void jListFontValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jListFontValueChanged
         // TODO add your handling code here:
         Font current = lbPreview.getFont();
-        String fontName = jListFont.getSelectedValue().toString();
+        String fontName = jListFont.getSelectedValue();
         int fontStyle = current.getStyle();
         int fontSize = current.getSize();
         jTextFieldFont.setText(fontName);
@@ -248,7 +248,7 @@ public class FontDialog extends javax.swing.JDialog {
         String fontName = current.getFontName();
         int fontStyle = jListFontStyle.getSelectedIndex();
         int fontSize = current.getSize();
-        jTextFieldFontStyle.setText(jListFontStyle.getSelectedValue().toString());
+        jTextFieldFontStyle.setText(jListFontStyle.getSelectedValue());
         Font f = new Font(fontName, fontStyle, fontSize);
         lbPreview.setFont(f);
     }//GEN-LAST:event_jListFontStyleValueChanged
@@ -311,17 +311,15 @@ public class FontDialog extends javax.swing.JDialog {
         //</editor-fold>
 
         /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                FontDialog dialog = new FontDialog(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            FontDialog dialog = new FontDialog(new javax.swing.JFrame(), true);
+            dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                @Override
+                public void windowClosing(java.awt.event.WindowEvent e) {
+                    System.exit(0);
+                }
+            });
+            dialog.setVisible(true);
         });
     }
 

@@ -1,9 +1,9 @@
 package GUI;
 
-
 import client.ClientManager;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
+
 /**
  *
  * @author Admin
@@ -28,8 +28,8 @@ public class Home extends javax.swing.JFrame {
     }
 
     public int getUserChoice(String from, int size) {
-        return JOptionPane.showConfirmDialog(this, "Do you want to play Caro (" + size + "x" + size + ") with " +
-                from + "?", "Invite", JOptionPane.YES_NO_OPTION);
+        return JOptionPane.showConfirmDialog(this, "Do you want to play Caro (" + size + "x" + size + ") with "
+                + from + "?", "Invite", JOptionPane.YES_NO_OPTION);
     }
 
     public void removeUserFromList(String userName) {

@@ -1,13 +1,15 @@
 package MANAGER;
 
 import java.io.File;
+
 /**
  *
  * @author Admin
  */
 public class Node {
+
     private File parent;
-    private String name="";
+    private String name = "";
 
     public Node(File parent) {
         this.parent = parent;
@@ -20,9 +22,9 @@ public class Node {
 
     @Override
     public String toString() {
-        if(name.equals("")){
-        return parent.getName()+ "";
-        }else{
+        if (name.equals("")) {
+            return parent.getName() + "";
+        } else {
             return name;
         }
     }

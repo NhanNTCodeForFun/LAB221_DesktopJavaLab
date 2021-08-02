@@ -4,15 +4,17 @@ import javax.swing.*;
 import java.awt.*;
 
 import static javax.swing.GroupLayout.Alignment.*;
+
 /**
  *
  * @author Admin
  */
 public class RenameDialog extends JDialog {
-    private JLabel label = new JLabel("New name:");
-    private JTextField txtFind = new JTextField(20);
-    private JButton findButton = new JButton("Rename");
-    private JButton cancelButton = new JButton("Cancel");
+
+    private final JLabel label = new JLabel("New name:");
+    private final JTextField txtFind = new JTextField(20);
+    private final JButton findButton = new JButton("Rename");
+    private final JButton cancelButton = new JButton("Cancel");
 
     public RenameDialog(Frame owner, boolean modal) {
         super(owner, modal);
@@ -20,8 +22,8 @@ public class RenameDialog extends JDialog {
         setResizable(false);
     }
 
-    private void createAndShowGUI() {ButtonGroup buttonGroup = new ButtonGroup();
-
+    private void createAndShowGUI() {
+        ButtonGroup buttonGroup = new ButtonGroup();
 
         GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);

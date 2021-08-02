@@ -1,6 +1,5 @@
 package main;
 
-
 import client.ClientManager;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -16,7 +15,7 @@ public final class Main {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             ClientManager playerControl = new ClientManager();
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-            
+
         }
     }
 

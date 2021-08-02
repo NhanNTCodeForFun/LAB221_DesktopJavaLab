@@ -5,6 +5,7 @@
  */
 package GUI;
 
+import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
@@ -414,17 +415,15 @@ public class ProductManager extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    Connection getConnection(){
+    Connection getConnection() {
         Connection cn = null;
         try {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-            
+
             String url = "jdbc:sqlserver://localhost:1433;databaseName=Product";
             cn = DriverManager.getConnection(url, "sa", "123456");
             return cn;
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ProductManager.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
+        } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(ProductManager.class.getName()).log(Level.SEVERE, null, ex);
         }
         return cn;
@@ -435,22 +434,20 @@ public class ProductManager extends javax.swing.JFrame {
         try {
 //            String query = "insert into Category(ProductName) values (?) ";
 //            PreparedStatement pst = cn.prepareStatement(query);
-            String item;
+            String item1;
             while (true) {
-                if (checkDuplicate(CategoryList, item = JOptionPane.showInputDialog(null))) {
+                if (checkDuplicate(CategoryList, item1 = JOptionPane.showInputDialog(null))) {
                     break;
                 }
             }
-            if(item.equals(""))
-            {
-               JOptionPane.showMessageDialog(null, "This inputed is empty"); 
-            } else
-            {
-            NewCategory.add(item);
-            List.add(item);
-            JOptionPane.showMessageDialog(null, "add Successfully");
+            if (item1.equals("")) {
+                JOptionPane.showMessageDialog(null, "This inputed is empty");
+            } else {
+                NewCategory.add(item1);
+                List.add(item1);
+                JOptionPane.showMessageDialog(null, "add Successfully");
             }
-        } catch (Exception e) {
+        } catch (HeadlessException e) {
             e.printStackTrace();
         }
 
@@ -460,9 +457,9 @@ public class ProductManager extends javax.swing.JFrame {
         // TODO add your handling code here:
         Connection cn = getConnection();
         try {
-            for (String newCategory : NewCategory) {
+            NewCategory.forEach((newCategory) -> {
                 CategoryList.add(newCategory);
-            }
+            });
             String query = "insert into Category(ProductName) values (?)";
             PreparedStatement pst = cn.prepareStatement(query);
             for (String productName : NewCategory) {
@@ -470,7 +467,7 @@ public class ProductManager extends javax.swing.JFrame {
                 pst.executeUpdate();
             }
 
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             updateCategoryComboBox();
@@ -491,9 +488,9 @@ public class ProductManager extends javax.swing.JFrame {
                 }
 
                 List.removeAll();
-                for (String ProName : NewCategory) {
+                NewCategory.forEach((ProName) -> {
                     List.add(ProName);
-                }
+                });
                 pst.executeUpdate();
                 loadCategory();
 
@@ -507,7 +504,7 @@ public class ProductManager extends javax.swing.JFrame {
                     dm.removeRow(i);
                 }
 
-            } catch (Exception e) {
+            } catch (SQLException e) {
             }
 
         }
@@ -544,17 +541,19 @@ public class ProductManager extends javax.swing.JFrame {
             header.add("Product quantity");
             header.add("Product price");
             if (thisList.size() > 0) {
-                for (Product product : thisList) {
+                thisList.stream().map((product) -> {
                     Vector row = new Vector();
                     row.add(product.getProductID());
                     row.add(product.getProductName());
                     row.add(product.getQuantity());
                     row.add(product.getPrice());
+                    return row;
+                }).forEachOrdered((row) -> {
                     data.add(row);
-                }
+                });
                 model.setDataVector(data, header);
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
         }
     }//GEN-LAST:event_ListItemStateChanged
 
@@ -577,7 +576,7 @@ public class ProductManager extends javax.swing.JFrame {
             pst.setDouble(5, Double.parseDouble(price.getText().trim()));
             pst.executeUpdate();
             loadProduct();
-        } catch (Exception ex) {
+        } catch (NumberFormatException | SQLException ex) {
         }
         checkProductID(ID.getText());
     }//GEN-LAST:event_btnNewActionPerformed
@@ -599,7 +598,7 @@ public class ProductManager extends javax.swing.JFrame {
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
         // TODO add your handling code here
         Connection cn = getConnection();
-        for (Product product : ProductList) {
+        ProductList.forEach((_item) -> {
             if (!Validation.checkDuplicateID(ID.getText(), ProductList)) {
                 try {
                     String query = "UPDATE Product "
@@ -614,7 +613,7 @@ public class ProductManager extends javax.swing.JFrame {
                     pst.setString(6, tmpID);
                     pst.executeUpdate();
                     loadProduct();
-                } catch (Exception ex) {
+                } catch (NumberFormatException | SQLException ex) {
                 }
             } else {
                 try {
@@ -627,10 +626,10 @@ public class ProductManager extends javax.swing.JFrame {
                     pst.setDouble(5, Double.parseDouble(price.getText().trim()));
                     pst.executeUpdate();
                     loadProduct();
-                } catch (Exception ex) {
+                } catch (NumberFormatException | SQLException ex) {
                 }
             }
-        }
+        });
     }//GEN-LAST:event_btnSaveActionPerformed
 
     private void btnDelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelActionPerformed
@@ -711,14 +710,16 @@ public class ProductManager extends javax.swing.JFrame {
             header.add("Product quantity");
             header.add("Product price");
             if (thisList.size() > 0) {
-                for (Product product : thisList) {
+                thisList.stream().map((product) -> {
                     Vector row = new Vector();
                     row.add(product.getProductID());
                     row.add(product.getProductName());
                     row.add(product.getQuantity());
                     row.add(product.getPrice());
+                    return row;
+                }).forEachOrdered((row) -> {
                     data.add(row);
-                }
+                });
                 model.setDataVector(data, header);
             }
         } catch (SQLException ex) {
@@ -760,14 +761,16 @@ public class ProductManager extends javax.swing.JFrame {
             header.add("Product quantity");
             header.add("Product price");
             if (thisList.size() > 0) {
-                for (Product product : thisList) {
+                thisList.stream().map((product) -> {
                     Vector row = new Vector();
                     row.add(product.getProductID());
                     row.add(product.getProductName());
                     row.add(product.getQuantity());
                     row.add(product.getPrice());
+                    return row;
+                }).forEachOrdered((row) -> {
                     data.add(row);
-                }
+                });
                 model.setDataVector(data, header);
             }
         } catch (SQLException ex) {
@@ -809,10 +812,8 @@ public class ProductManager extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new ProductManager().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new ProductManager().setVisible(true);
         });
     }
 
@@ -864,10 +865,8 @@ public class ProductManager extends javax.swing.JFrame {
 
     private boolean checkDuplicate(ArrayList<String> list, String name) {
         if (name != null) {
-            for (String string : list) {
-                if (name.equals(string)) {
-                    return false;
-                }
+            if (!list.stream().noneMatch((string) -> (name.equals(string)))) {
+                return false;
             }
 
         }
@@ -903,14 +902,16 @@ public class ProductManager extends javax.swing.JFrame {
             header.add("Product quantity");
             header.add("Product price");
             if (ProductList.size() > 0) {
-                for (Product product : ProductList) {
+                ProductList.stream().map((product) -> {
                     Vector row = new Vector();
                     row.add(product.getProductID());
                     row.add(product.getProductName());
                     row.add(product.getQuantity());
                     row.add(product.getPrice());
+                    return row;
+                }).forEachOrdered((row) -> {
                     data.add(row);
-                }
+                });
                 model = (DefaultTableModel) jTable1.getModel();
                 model.setDataVector(data, header);
             }
@@ -922,9 +923,9 @@ public class ProductManager extends javax.swing.JFrame {
 
     private void updateCategoryComboBox() {
         combox.removeAllItems();
-        for (String category : CategoryList) {
+        CategoryList.forEach((category) -> {
             combox.addItem(category);
-        }
+        });
     }
 
     private Product searchByID(String id) {
@@ -939,19 +940,12 @@ public class ProductManager extends javax.swing.JFrame {
     private void createPopupMenu(JFrame frame) {
         item = new JMenuItem("Save as new item");
         item.getAccessibleContext().setAccessibleDescription("Save as new item");
-        item.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-            }
+        item.addActionListener((ActionEvent e) -> {
         });
         popupMenu.add(item);
         item = new JMenuItem("Update selected item in table");
         item.getAccessibleContext().setAccessibleDescription("Update selected item in table");
-        item.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-            }
+        item.addActionListener((ActionEvent e) -> {
         });
         popupMenu.add(item);
     }
@@ -997,20 +991,14 @@ public class ProductManager extends javax.swing.JFrame {
 
     boolean checkNull() {
         try {
-            if (name.getText().isEmpty() || quantity.getText().isEmpty() || price.getText().isEmpty() || ID.getText().isEmpty()) {
-                return false;
-            }
-            return true;
+            return !(name.getText().isEmpty() || quantity.getText().isEmpty() || price.getText().isEmpty() || ID.getText().isEmpty());
         } catch (NullPointerException e) {
             return false;
         }
     }
 
     boolean checkNoError() {
-        if (!NameError.getText().isEmpty() || !IDerror.getText().isEmpty() || !quanError.getText().isEmpty() || !priceError.getText().isEmpty()) {
-            return false;
-        }
-        return true;
+        return !(!NameError.getText().isEmpty() || !IDerror.getText().isEmpty() || !quanError.getText().isEmpty() || !priceError.getText().isEmpty());
     }
 
     class MyThread extends Thread {
